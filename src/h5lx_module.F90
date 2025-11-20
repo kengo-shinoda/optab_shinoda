@@ -15,7 +15,25 @@ MODULE h5LX_module
 
 CONTAINS
 
-  SUBROUTINE h5LXopen_file(filename, access_flag, file_spec, error, comm, info)
+!   SUBROUTINE h5LXopen_file(filename, access_flag, file_spec, error, comm, info)
+!     CHARACTER(LEN=*), INTENT(IN) :: filename
+!     INTEGER(INT32), INTENT(IN) :: access_flag     ! File access flags  
+!     INTEGER(HID_T), INTENT(OUT) :: file_spec
+!     INTEGER(INT32), INTENT(INOUT) :: error
+!     INTEGER(INT32), INTENT(IN), OPTIONAL :: comm
+!     INTEGER(INT32), INTENT(IN), OPTIONAL :: info
+
+!     INTEGER(HID_T) :: plist_id
+
+!     CALL h5pcreate_F(H5P_FILE_ACCESS_F, plist_id, error)
+!     CALL h5pset_fapl_mpio_f(plist_id, comm, info, error)
+!     CALL h5Fopen_f(filename, access_flag, file_spec, error, plist_id)
+!     CALL h5Pclose_f(plist_id, error)
+    
+!     RETURN    
+!   END SUBROUTINE h5LXopen_file
+
+   SUBROUTINE h5LXopen_file(filename, access_flag, file_spec, error, comm, info)
     CHARACTER(LEN=*), INTENT(IN) :: filename
     INTEGER(INT32), INTENT(IN) :: access_flag     ! File access flags  
     INTEGER(HID_T), INTENT(OUT) :: file_spec
@@ -23,15 +41,15 @@ CONTAINS
     INTEGER(INT32), INTENT(IN), OPTIONAL :: comm
     INTEGER(INT32), INTENT(IN), OPTIONAL :: info
 
-    INTEGER(HID_T) :: plist_id
+    ! NOTE:
+    ! ここでは並列HDF5(MPI-IO)は使わず、
+    ! 通常のファイルアクセスプロパティ（デフォルト）で開く。
 
-    CALL h5pcreate_F(H5P_FILE_ACCESS_F, plist_id, error)
-    CALL h5pset_fapl_mpio_f(plist_id, comm, info, error)
-    CALL h5Fopen_f(filename, access_flag, file_spec, error, plist_id)
-    CALL h5Pclose_f(plist_id, error)
-    
+    CALL h5Fopen_f(filename, access_flag, file_spec, error)
+
     RETURN    
   END SUBROUTINE h5LXopen_file
+
 
 
   SUBROUTINE h5LXset_extendible_dataset(dataset, location, name, datatype, chunk, gzip)

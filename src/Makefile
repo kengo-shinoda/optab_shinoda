@@ -1,20 +1,71 @@
 ### SYSTEM DEPENDENT SECTION ###
-OPENMPI = /opt/local
-HDF5 = /opt/local
+OPENMPI = 
+HDF5 = $(HOME)/hdf5_parallel
 
 FFLAGS  = -fallow-argument-mismatch -Wall -O3 #-fbounds-check
 
 ### SYSTEM INDEPENDENT SECTION
 SHELL = /bin/sh
 
+#H5PFC = false
+#ifeq ($(H5PFC),true)
+#FC = $(HDF5)/bin/h5pfc
+#else
+#FC = $(OPENMPI)/bin/mpif90
+#FFLAGS += -I$(OPENMPI)/include -I$(HDF5)/include
+#LDFLAGS = -L$(HDF5)/lib -lhdf5 -lhdf5_hl -lhdf5_fortran -lhdf5_hl_fortran
+#endif
+
+#H5PFC = false
+#ifeq ($(H5PFC),true)
+#  FC = $(HDF5)/bin/h5pfc
+#else
+#  FC = $(OPENMPI)/bin/mpif90
+#  FFLAGS  += -I$(OPENMPI)/include -I$(HDF5)/include
+  # ここを「-l」ではなくフルパス指定に変更
+#  LDFLAGS = $(HDF5)/lib/libhdf5_fortran.a \
+#            $(HDF5)/lib/libhdf5hl_fortran.a \
+#            $(HDF5)/lib/libhdf5.a \
+#            $(HDF5)/lib/libhdf5_hl.a \
+#            -lz -ldl -lm
+#endif
+
+#H5PFC = false
+#ifeq ($(H5PFC),true)
+#  FC = $(HDF5)/bin/h5pfc
+#else
+#  FC = $(OPENMPI)/bin/mpif90
+#  FFLAGS  += -I$(OPENMPI)/include -I$(HDF5)/include
+#  LDFLAGS = -L$(HDF5)/lib \
+#            -Wl,-rpath,$(HDF5)/lib \
+#            -lhdf5_fortran -lhdf5 \
+#            -lz -ldl -lm
+#endif
+
+#H5PFC = false
+#ifeq ($(H5PFC),true)
+#  FC = $(HDF5)/bin/h5pfc
+#else
+#  FC = $(OPENMPI)/bin/mpif90
+#  FFLAGS  += -I$(OPENMPI)/include -I$(HDF5)/include
+#  LDFLAGS = -L$(HDF5)/lib \
+#            -Wl,-rpath,$(HDF5)/lib \
+#            -lhdf5_fortran -lhdf5hl_fortran -lhdf5 -lhdf5_hl \
+#            -lz -ldl -lm
+#endif
+
 H5PFC = false
 ifeq ($(H5PFC),true)
-FC = $(HDF5)/bin/h5pfc
+  FC = $(HDF5)/bin/h5pfc
 else
-FC = $(OPENMPI)/bin/mpif90
-FFLAGS += -I$(OPENMPI)/include -I$(HDF5)/include
-LDFLAGS = -L$(HDF5)/lib -lhdf5 -lhdf5_hl -lhdf5_fortran -lhdf5_hl_fortran
+  FC = mpif90
+  FFLAGS  += -I$(HDF5)/include
+  LDFLAGS = -L$(HDF5)/lib \
+            -Wl,-rpath,$(HDF5)/lib \
+            -lhdf5_fortran -lhdf5hl_fortran -lhdf5 -lhdf5_hl \
+            -lz -ldl -lm
 endif
+
 
 #LDFLAGS += -L/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib
 #LDFLAGS += -mmacosx-version-min=11.2
